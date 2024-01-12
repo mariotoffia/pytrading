@@ -1,0 +1,10 @@
+{
+  "cSpell.words": [
+    "miniforge",
+    "pytrading",
+    "virtualenv",
+    "yfinance"
+  ],
+  "notebook.output.scrolling": true,
+  "notebook.output.textLineLimit": 80
+}
