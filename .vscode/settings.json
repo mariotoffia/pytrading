@@ -1,9 +1,14 @@
 {
   "cSpell.words": [
     "astype",
+    "bbands",
+    "Bollinger",
+    "dataframe",
     "executemany",
+    "iloc",
     "miniforge",
     "pytrading",
+    "tqdm",
     "virtualenv",
     "xaxis",
     "yaxis",

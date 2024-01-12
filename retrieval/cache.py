@@ -20,6 +20,17 @@ def get_cache_sql_db(ticker: str, interval: str, cache_dir: str = "${TMP}/cache"
 
     return os.path.join(cache_path, "db.sql")
 
+def exist_sql_db(
+        ticker: str, 
+        interval: str) -> bool:
+    """
+    Returns True if the ticker data exists in the cache.
+
+    How much data is never evaluated.
+    """
+    db_file = get_cache_sql_db(ticker, interval)
+
+    return os.path.exists(db_file)
 
 def cache_ticker(
         ticker: str, 
@@ -65,3 +76,37 @@ def cache_ticker(
         conn.executemany('''INSERT OR REPLACE INTO ticker_data 
                         ("Date", "Open", "High", "Low", "Close", "Adj Close", "Volume")
                         VALUES (?, ?, ?, ?, ?, ?, ?)''', data_to_insert)
+
+def load_ticker(
+        ticker: str, 
+        interval: str, 
+        start: str, 
+        end: str, 
+        cache_dir: str = "${TMP}/cache", 
+        index_column:str = "", strip_date_time_fractions: bool = True) -> pd.DataFrame:
+    """
+    Loads ticker data from the SQLite database.
+    If the data is not in the database, it raises a ValueError.
+    
+    If the index_column is specified, it will be used as the index of the DataFrame.
+    If strip_date_time_fractions is True, the time portion of the index will be stripped
+    of their fraction of seconds.
+    """
+
+    # Database file path
+    db_file = get_cache_sql_db(ticker, interval, cache_dir)
+
+    # Connect to the SQLite database
+    with sqlite3.connect(db_file) as conn:
+        # Load data from database
+        df = pd.read_sql_query(f"SELECT * FROM ticker_data WHERE Date BETWEEN '{start}' AND '{end}'", conn)
+
+        # Strip date time fractions
+        if strip_date_time_fractions:
+            df['Date'] = df['Date'].astype(str).str[:19]
+
+        # Set index
+        if index_column:
+            df.set_index(index_column, inplace=True)
+
+    return df
