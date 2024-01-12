@@ -106,6 +106,9 @@ def load_ticker(
         if strip_date_time_fractions:
             df['Date'] = df['Date'].astype(str).str[:19]
 
+        # Make sure that the date time is a pd.DateTimeIndex
+        df['Date'] = pd.to_datetime(df['Date'])
+
         # Set index
         if index_column:
             df.set_index(index_column, inplace=True)

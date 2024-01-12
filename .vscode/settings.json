@@ -1,6 +1,8 @@
 {
   "cSpell.words": [
     "astype",
+    "Backtest",
+    "backtesting",
     "bbands",
     "Bollinger",
     "darkorange",
@@ -9,6 +11,7 @@
     "iloc",
     "miniforge",
     "pytrading",
+    "TPSL",
     "tqdm",
     "virtualenv",
     "xaxis",
