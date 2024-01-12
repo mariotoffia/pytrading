@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+# Ignore html files since backtesting plots are html pages
+*.html
+
 # C extensions
 *.so
 
