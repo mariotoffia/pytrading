@@ -1,4 +1,4 @@
 freeze:
 	@pip freeze > requirements.txt
 dep:
-	@pip install -r requirements.txt
+	@pip list --format=freeze > requirements.txt
