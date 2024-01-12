@@ -3,6 +3,8 @@
     "miniforge",
     "pytrading",
     "virtualenv",
+    "xaxis",
+    "yaxis",
     "yfinance"
   ],
   "notebook.output.scrolling": true,
