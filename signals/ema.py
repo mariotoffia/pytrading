@@ -7,17 +7,22 @@ EMA_FAST_ABOVE_EMA_SLOW:int = 2
 # This is when all the back_candles are neither above or below EMA Slow & Fast
 NO_CONCLUSIVE_SIGNAL:int = 0
 
-def two_above_or_below(df:pd.DataFrame, current_candle:int, back_candles:int) -> int:
+def two_above_or_below(
+    df:pd.DataFrame, 
+    current_candle:int, 
+    back_candles:int,
+    ema_fast_column:str = 'EMA Fast',
+    ema_slow_column:str = 'EMA Slow'
+    ) -> int:
   """"
   This function will check up to back_candles candles before the current_candle
-  if all of them are EMA Fast is are below EMA Slow. If so, it will return _EMA_FAST_BELOW_EMA_SLOW_.
-  If all of them are above, it will return _EMA_FAST_ABOVE_EMA_SLOW_.
+  if all of them are EMA Fast is are above or below EMA Slow.
+  
+  :param df: DataFrame containing the ticker data
+  :param current_candle: Current candle we're looking at
+  :param back_candles: How many candles back we're looking at (used for trend analysis)
 
-  Otherwise _NO_CONCLUSIVE_SIGNAL_ will be returned.
-
-  NOTE: This function *REQUIRES* that column 'EMA Fast' and 'EMA Slow' are present,
-        and that the dataframe is sorted by date (ascending). What 'EMA Fast' and
-        'EMA Slow' are is up to you to decide.
+  :return: Returns a signal EMA_FAST_BELOW_EMA_SLOW, EMA_FAST_ABOVE_EMA_SLOW or NO_CONCLUSIVE_SIGNAL.
   """
   # Copy the dataframe
   dfs = df.reset_index().copy()
@@ -28,9 +33,9 @@ def two_above_or_below(df:pd.DataFrame, current_candle:int, back_candles:int) ->
   rows = dfs.iloc[start:end]
 
   # Check if all EMA Fast values are below EMA Slow
-  if all(rows['EMA Fast'] < rows['EMA Slow']):
+  if all(rows[ema_fast_column] < rows[ema_slow_column]):
     return EMA_FAST_BELOW_EMA_SLOW
-  elif all(rows['EMA Fast'] > rows['EMA Slow']):
+  elif all(rows[ema_fast_column] > rows[ema_slow_column]):
     return EMA_FAST_ABOVE_EMA_SLOW
   else:
     return NO_CONCLUSIVE_SIGNAL

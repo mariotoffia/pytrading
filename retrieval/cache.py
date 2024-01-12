@@ -22,13 +22,14 @@ def get_cache_sql_db(ticker: str, interval: str, cache_dir: str = "${TMP}/cache"
 
 def exist_sql_db(
         ticker: str, 
-        interval: str) -> bool:
+        interval: str, 
+        cache_dir: str = "${TMP}/cache") -> bool:
     """
     Returns True if the ticker data exists in the cache.
 
     How much data is never evaluated.
     """
-    db_file = get_cache_sql_db(ticker, interval)
+    db_file = get_cache_sql_db(ticker, interval,cache_dir)
 
     return os.path.exists(db_file)
 
