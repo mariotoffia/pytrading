@@ -16,6 +16,7 @@
     "tqdm",
     "TSLA",
     "virtualenv",
+    "VWAP",
     "xaxis",
     "yaxis",
     "yfinance"

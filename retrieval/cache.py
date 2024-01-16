@@ -84,7 +84,8 @@ def load_ticker(
         start: str, 
         end: str, 
         cache_dir: str = "${TMP}/cache", 
-        index_column:str = "", strip_date_time_fractions: bool = True) -> pd.DataFrame:
+        index_column:str = "", 
+        strip_date_time_fractions: bool = True) -> pd.DataFrame:
     """
     Loads ticker data from the SQLite database.
     If the data is not in the database, it raises a ValueError.
@@ -107,10 +108,13 @@ def load_ticker(
             df['Date'] = df['Date'].astype(str).str[:19]
 
         # Make sure that the date time is a pd.DateTimeIndex
+        # (but only if we set the 'Date' as index, otherwise just a indication)
         df['Date'] = pd.to_datetime(df['Date'])
 
-        # Set index
+        # Set index to specific column
         if index_column:
             df.set_index(index_column, inplace=True)
+        else:
+            df.set_index('Date', inplace=True)
 
     return df
