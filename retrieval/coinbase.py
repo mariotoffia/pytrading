@@ -4,7 +4,7 @@ from os import getenv
 from typing import List, Optional
 from datetime import datetime
 from coinbaseadvanced.client import CoinbaseAdvancedTradeAPIClient, AuthSchema, ProductType, Granularity
-
+from coinbaseadvanced.models.products import BidAsk
 
 class CoinbaseClient:
     def __init__(self, api_key: str = 'CB_API_KEY_NAME', secret_key='CB_PRIVATE_KEY'):
@@ -84,7 +84,77 @@ class CoinbaseClient:
         df.set_index('Date', inplace=True)
 
         return df
+    def get_market_trades(self, product_id: str, limit: int = 100) -> pd.DataFrame:
+        trade_page = self.client.get_market_trades(
+            product_id=product_id,
+            limit=limit
+        )
 
+        trade_data = []
+
+        for trade in trade_page.trades:
+            trade_data.append({
+                'Date': pd.to_datetime(trade.time),
+                'Trade_Id': str(trade.trade_id),
+                'Product_Id': str(trade.product_id),
+                'Price': float(trade.price),
+                'Size': float(trade.size),
+                'Side': trade.side
+            })
+
+        df = pd.DataFrame(trade_data)
+        df.set_index('Date', inplace=True)
+
+        return df
+    
+    def get_product_book(self, product_id: str, limit: int = None) -> pd.DataFrame:
+        product_page = self.client.get_product_book(
+            product_id=product_id,
+            limit=limit
+        )
+
+        book_data = []
+
+        for bid in product_page.pricebook.bids:
+            book_data.append({
+                'Type': 'Bid',
+                'Price': float(bid.price),
+                'Size': float(bid.size)
+            })
+
+        for ask in product_page.pricebook.asks:
+            book_data.append({
+                'Type': 'Ask',
+                'Price': float(ask.price),
+                'Size': float(ask.size)
+            })
+
+        return pd.DataFrame(book_data)
+    
+    def get_best_bid_ask(self, product_ids: List[str] = None) -> pd.DataFrame:
+        bids_ask_page = self.client.get_best_bid_ask(product_ids=product_ids)
+
+        pricebooks: List[BidAsk] = bids_ask_page.pricebooks
+        bids_ask_data = []
+
+        for bid_ask in pricebooks:
+            for bid in bid_ask.bids:
+                bids_ask_data.append({
+                    'Product_Id': bid_ask.product_id,
+                    'Type': 'Bid',
+                    'Price': float(bid.price),
+                    'Size': float(bid.size)
+                })
+            
+            for ask in bid_ask.asks:
+                bids_ask_data.append({
+                    'Product_Id': bid_ask.product_id,
+                    'Type': 'Ask',
+                    'Price': float(ask.price),
+                    'Size': float(ask.size)
+                })
+            
+        return pd.DataFrame(bids_ask_data)
 
 def product_to_dict(product, columns: Optional[List[str]] = None):
     # List of all possible attributes of the Product class

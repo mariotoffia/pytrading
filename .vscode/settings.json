@@ -13,6 +13,8 @@
     "executemany",
     "iloc",
     "miniforge",
+    "pricebook",
+    "pricebooks",
     "pytrading",
     "rangeselector",
     "rangeslider",
