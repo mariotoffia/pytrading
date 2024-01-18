@@ -70,7 +70,7 @@ def cache_ticker(
         conn.execute('''CREATE TABLE IF NOT EXISTS ticker_data (
                             "Date" TEXT PRIMARY KEY,
                             "Open" REAL, "High" REAL, "Low" REAL, 
-                            "Close" REAL, "Adj Close" REAL, "Volume" INTEGER)''')
+                            "Close" REAL, "Adj Close" REAL, "Volume" REAL)''')
 
         # Prepare data for insertion
         records = ticker_data.reset_index().to_records(index=False)
@@ -88,11 +88,6 @@ def cache_ticker(
 
         if adj_close_index != -1:
             adj_close_index += 1
-
-        print(f'''Date: 0, open_index = {open_index}, high_index = {
-              high_index}, low_index = {low_index}''')
-        print(f'''close_index = {close_index}, adj_close_index = {
-              adj_close_index}, volume_index = {volume_index}''')
 
         data_to_insert = []
 

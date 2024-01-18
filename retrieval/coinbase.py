@@ -81,7 +81,7 @@ class CoinbaseClient:
 
         # Create the DataFrame and set 'date' as the index
         df = pd.DataFrame(candles_data)
-        df.set_index('date', inplace=True)
+        df.set_index('Date', inplace=True)
 
         return df
 
