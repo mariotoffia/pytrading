@@ -6,6 +6,8 @@ __pycache__/
 # Ignore html files since backtesting plots are html pages
 *.html
 
+# Ignore the .env file
+
 # C extensions
 *.so
 
